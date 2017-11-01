@@ -9,12 +9,6 @@ from PyQt5.QtWidgets import QApplication
 from PyQt5 import QtCore
 from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
-class ChatView(QtWidgets.QTextEdit):
-    
-
-    def __init__(self):
-        super(ChatView, self).__init__()
-
 
 class SignalSlotHandler(QtCore.QObject):
 
@@ -36,11 +30,7 @@ class MumbleGUI:
         self.window = uic.loadUi('pymumblegui.ui')
         self.window.show()
         self.centralwidget = self.window.centralwidget
-        self.chat_view = ChatView()
-        self.chat_view.setReadOnly(True)
-        self.chat_view.setCursorWidth(0)
-        self.chat_view_scroll_area = self.centralwidget.findChild(QtWidgets.QScrollArea, 'scrollArea')
-        self.chat_view_scroll_area.setWidget(self.chat_view)
+        self.chat_view = self.centralwidget.findChild(QtWidgets.QTextEdit)
         self.chat_entry = self.centralwidget.findChild(QtWidgets.QLineEdit)
         self.reciever = SignalSlotHandler(self)
 
