@@ -28,12 +28,16 @@
            <x>0</x>
            <y>0</y>
            <width>778</width>
-           <height>248</height>
+           <height>234</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_2">
-          <item row="1" column="0">
-           <widget class="QTreeView" name="treeView"/>
+          <item row="0" column="0">
+           <widget class="QTreeWidget" name="treeWidget">
+            <property name="columnCount">
+             <number>0</number>
+            </property>
+           </widget>
           </item>
          </layout>
         </widget>
@@ -56,18 +60,58 @@
            <x>0</x>
            <y>0</y>
            <width>778</width>
-           <height>247</height>
+           <height>261</height>
           </rect>
          </property>
          <layout class="QGridLayout" name="gridLayout_3">
-          <item row="1" column="0">
-           <widget class="QTextEdit" name="textEdit">
-            <property name="readOnly">
-             <bool>true</bool>
-            </property>
-            <property name="cursorWidth">
+          <item row="0" column="0">
+           <widget class="QTabWidget" name="tabbed_chat">
+            <property name="currentIndex">
              <number>0</number>
             </property>
+            <widget class="QWidget" name="tab_3">
+             <property name="cursor">
+              <cursorShape>ArrowCursor</cursorShape>
+             </property>
+             <attribute name="title">
+              <string>Global</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_4">
+              <item row="0" column="0">
+               <widget class="QTextEdit" name="global_chat">
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="cursorWidth">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="tab_4">
+             <attribute name="title">
+              <string>Channel</string>
+             </attribute>
+             <layout class="QGridLayout" name="gridLayout_5">
+              <item row="0" column="0">
+               <widget class="QTextEdit" name="channel_chat">
+                <property name="inputMethodHints">
+                 <set>Qt::ImhNone</set>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
+                </property>
+                <property name="cursorWidth">
+                 <number>0</number>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </widget>
           </item>
          </layout>
@@ -90,8 +134,56 @@
      <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuServer">
+    <property name="title">
+     <string>Server</string>
+    </property>
+    <addaction name="actionConnect"/>
+    <addaction name="actionDisconnect"/>
+    <addaction name="actionInformation"/>
+    <addaction name="actionQuit_pymumblegui"/>
+   </widget>
+   <widget class="QMenu" name="menu3">
+    <property name="title">
+     <string>Configure</string>
+    </property>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
+   <addaction name="menuServer"/>
+   <addaction name="menu3"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionConnect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="actionDisconnect">
+   <property name="text">
+    <string>Disconnect</string>
+   </property>
+  </action>
+  <action name="actionInformation">
+   <property name="text">
+    <string>Information</string>
+   </property>
+  </action>
+  <action name="actionQuit_pymumblegui">
+   <property name="text">
+    <string>Quit pymumblegui</string>
+   </property>
+  </action>
+  <action name="actionSettings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
