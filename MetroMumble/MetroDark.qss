@@ -102,10 +102,9 @@ QWhatsThis {
 
 QTextBrowser,
 QTextEdit {
-  background-color: #2d2d2d;
-  color: #2d2d2d;
+  background-color: #1d1d1d;
+  color: #d8d8d8;
   border: 1px solid #1c1c1c;
-  
 }
 
 QToolBar {
@@ -584,7 +583,6 @@ QSpinBox,
 QAbstractSpinBox,
 QComboBox:editable {
   border: 1px solid #2e2e2e;
-
   background-color: #1f1f1f;
 }
 
@@ -904,7 +902,7 @@ UserView::item {
 }
 
 #qdwChat > QTextEdit {
-  background-color: #2d2d2d;
+  background-color: transparent;
   border: 0;
   font-size: 10pt;
 }
@@ -987,7 +985,6 @@ QSlider {
 #qswPages > * > QWidget {
   margin: 2px;
 }
-
 
 QListView::item QListWidgetItem,
 QListView::item QLineEdit,
