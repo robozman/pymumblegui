@@ -5,27 +5,27 @@ import functools
 import time
 import configparser
 import os
-import PyQt5
 import pyaudio
 import pymumble.pymumble_py3 as pymumble
 from PyQt5 import uic, QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
 
 class SignalSlotHandler(QtCore.QObject):
-    '''Handles the QtSignals and Slotsfor communication between the Mumble thread and the Qt thread'''
+    '''Handles the QtSignals and Slots
+    for communication between the Mumble thread and the Qt thread'''
     message_recieved = pyqtSignal('QString', 'QString', 'int')
 
     def __init__(self, host_mumble_gui=None):
-        if host_mumble_gui != None:
+        if host_mumble_gui is not None:
             self.mumble_gui = host_mumble_gui
         super(SignalSlotHandler, self).__init__()
 
     @pyqtSlot('QString', 'QString', 'int')
     def recieve_message(self, message_text, username, tab_index):
-        '''On recieveing a message signal, edits the text view with the username and the text body'''
-        #coursor = self.mumble_gui.channel_chat_view.textCursor()
+        '''On message signal,
+        edits the text view with the username and the text body'''
+#        coursor = self.mumble_gui.channel_chat_view.textCursor()
         current_chat = self.mumble_gui.tabbed_chat.widget(tab_index).findChild(
             QtWidgets.QTextEdit)
         cursor = current_chat.textCursor()
@@ -33,11 +33,13 @@ class SignalSlotHandler(QtCore.QObject):
             len(current_chat.toPlainText()))
         current_chat.setTextCursor(cursor)
         current_chat.insertPlainText(message_text)
-        #self.mumble_gui.chat_view.setPlainText(self.mumble_gui.chat_view.toPlainText() + message_text)
+#        self.mumble_gui.chat_view.setPlainText(
+#            self.mumble_gui.chat_view.toPlainText() + message_text)
 
 
 class MumbleGUI:
-    '''MumbleGUI: contains the QT gui stuff and loads the .ui file from designer'''
+    '''MumbleGUI: contains the QT gui stuff and
+    loads the .ui file from designer'''
 
     def __init__(self):
         self.app = QtWidgets.QApplication(sys.argv)
@@ -64,14 +66,15 @@ class MumbleGUI:
         self.channel_view.setSortingEnabled(True)
         self.channel_view.sortByColumn(2, QtCore.Qt.AscendingOrder)
 
-        self.centralwidget.findChild(QtWidgets.QScrollArea, 'scrollArea_2').setStyleSheet(
+        self.centralwidget.findChild(
+            QtWidgets.QScrollArea, 'scrollArea_2').setStyleSheet(
             "background-color:#1f1f1f;")
 
         self.root = 0
         self.root_tree = 0
         self.root_sub_channels = 0
         self.users = 0
-        #self.top_level = QtWidgets.QTreeWidgetItem(['A', 'B', 'C'])
+        # self.top_level = QtWidgets.QTreeWidgetItem(['A', 'B', 'C'])
 
         self.reciever = SignalSlotHandler(self)
 
@@ -111,7 +114,8 @@ class MumbleGUI:
         self.__delete_user_from_tree(user, mumble_client)
 
     def user_modified(self, mumble_client, user, fields):
-        '''Updates the channel list when a user is modified (changes channels, names, or mute/deaf status)'''
+        '''Updates the channel list when a user is
+        modified (changes channels, names, or mute/deaf status)'''
         if 'channel_id' in fields:
             self.__delete_user_from_tree(user, mumble_client)
             self.__add_user_to_tree(user, mumble_client)
@@ -152,7 +156,8 @@ class MumbleGUI:
 
     def __change_user_tree_icon(self, user, mumble_client, icon):
         user_to_change = self.channel_view.findItems(
-            str(user['session']), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 1)[0]
+            str(user['session']), QtCore.Qt.MatchExactly |
+            QtCore.Qt.MatchRecursive, 1)[0]
         if icon == 'muted':
             user_to_change.setIcon(0, QtGui.QIcon(
                 "MetroMumble/muted_self.svg"))
@@ -176,38 +181,41 @@ class MumbleGUI:
         # print(user)
         user_to_add = QtWidgets.QTreeWidgetItem(
             [user['name'], str(user['session']), 'user'])
-        channel_name = mumble_client.mumble.channels[channel_id]['name']
+        # channel_name = mumble_client.mumble.channels[channel_id]['name']
         channel_widget = self.channel_view.findItems(
-            str(channel_id), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 1)[0]
+            str(channel_id), QtCore.Qt.MatchExactly |
+            QtCore.Qt.MatchRecursive, 1)[0]
         channel_widget.addChild(user_to_add)
         channel_widget.setExpanded(True)
         # print(user)
         # print(user['session'])
         # print(channel_name)
         # print(channel_id)
-        #print(channel_widget.data(0, 0))
+        # print(channel_widget.data(0, 0))
         if 'self_deaf' in user:
             if user['self_deaf']:
                 user_to_add.setIcon(0, QtGui.QIcon(
                     "MetroMumble/deafened_self.svg"))
-                #self.__change_user_tree_icon(user, mumble_client, 'deaf')
+                # self.__change_user_tree_icon(user, mumble_client, 'deaf')
         elif 'self_mute' in user:
             if user['self_mute']:
                 user_to_add.setIcon(0, QtGui.QIcon(
                     "MetroMumble/muted_self.svg"))
-                #self.__change_user_tree_icon(user, mumble_client, 'muted')
+                # self.__change_user_tree_icon(user, mumble_client, 'muted')
         else:
             user_to_add.setIcon(0, QtGui.QIcon("MetroMumble/talking_off.svg"))
-            #self.__change_user_tree_icon(user, mumble_client, 'normal')
+            # self.__change_user_tree_icon(user, mumble_client, 'normal')
 
     def __delete_user_from_tree(self, user, mumble_client):
         channel_id = user['channel_id']
-        #channel_name = mumble_client.mumble.channels[channel_id]['name']
-        #user_name = user['name']
+        # channel_name = mumble_client.mumble.channels[channel_id]['name']
+        # user_name = user['name']
         channel_widget = self.channel_view.findItems(
-            str(channel_id), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 1)[0]
+            str(channel_id), QtCore.Qt.MatchExactly |
+            QtCore.Qt.MatchRecursive, 1)[0]
         user_widget = self.channel_view.findItems(
-            str(user['session']), QtCore.Qt.MatchExactly | QtCore.Qt.MatchRecursive, 1)[0]
+            str(user['session']), QtCore.Qt.MatchExactly |
+            QtCore.Qt.MatchRecursive, 1)[0]
         channel_widget.removeChild(user_widget)
 
     def __setup_connect_dialog(self):
@@ -235,7 +243,8 @@ class MumbleGUI:
 
         self.favorites_tree.setIcon(0, QtGui.QIcon(
             "MetroMumble/emblems/emblem-favorite.svg"))
-        #favorite1 = QtWidgets.QTreeWidgetItem(['saltisland.tk', '64738', 'pymumblegui'])
+        # favorite1 = QtWidgets.QTreeWidgetItem(
+        # ['saltisland.tk', '64738', 'pymumblegui'])
         # self.favorites_tree.addChild(favorite1)
 
         self.favorites.addTopLevelItem(self.favorites_tree)
@@ -243,15 +252,19 @@ class MumbleGUI:
         self.favorites.setColumnWidth(0, 250)
 
         self.connect_dialog.findChild(
-            QtWidgets.QPushButton, 'add_new_button').clicked.connect(self.__add_favorite_gui)
+            QtWidgets.QPushButton, 'add_new_button').clicked.connect(
+            self.__add_favorite_gui)
         self.connect_dialog.findChild(
-            QtWidgets.QPushButton, 'quit_button').clicked.connect(lambda: sys.exit(0))
+            QtWidgets.QPushButton, 'quit_button').clicked.connect(
+            lambda: sys.exit(0))
 
     def show_connect_dialog(self, mumble_client):
-        '''Shows the dialog that lists favorite servers and allows connections to be initiated'''
+        '''Shows the dialog that lists favorite servers
+        and allows connections to be initiated'''
 
         self.connect_dialog.connect_button.clicked.connect(
-            functools.partial(self.__make_mumble_client_connect, mumble_client))
+            functools.partial(
+                self.__make_mumble_client_connect, mumble_client))
         self.connect_dialog.exec()
 
     def __make_mumble_client_connect(self, mumble_client):
@@ -262,7 +275,7 @@ class MumbleGUI:
             host = selected_item.data(0, 0)
             port = selected_item.data(1, 0)
             user = selected_item.data(2, 0)
-            #print('Host: %s, Port: %s, User: %s'%(host, port, user))
+#            print('Host: %s, Port: %s, User: %s'%(host, port, user))
             try:
                 mumble_client.connect(host, port, user)
             except ConnectionError:
@@ -294,13 +307,15 @@ class MumbleGUI:
         self.favorites_tree.addChild(to_add)
 
     def make_signal_slot_connection(self, mumble_client):
-        'Connects the pyqtSignal and pyqtSlot from the mumble callbacks to the GUI class'
+        '''Connects the pyqtSignal and pyqtSlot from
+        the mumble callbacks to the GUI class'''
         mumble_client.sender.message_recieved.connect(
             self.reciever.recieve_message)
 
 
 class MumbleClient:
-    '''MumbleClient: includes all the variables to initalize a mumble server connection'''
+    '''MumbleClient: includes all the variables
+    to initalize a mumble server connection'''
 
     def __init__(self):
 
@@ -341,24 +356,26 @@ class MumbleClient:
 
         self.sender = SignalSlotHandler()
         self.mumble.callbacks.set_callback(
-            pymumble.constants.PYMUMBLE_CLBK_TEXTMESSAGERECEIVED, self.on_message_recieved)
+            pymumble.constants.PYMUMBLE_CLBK_TEXTMESSAGERECEIVED,
+            self.on_message_recieved)
         self.mumble.callbacks.set_callback(
-            pymumble.constants.PYMUMBLE_CLBK_SOUNDRECEIVED, self.on_sound_received)
+            pymumble.constants.PYMUMBLE_CLBK_SOUNDRECEIVED,
+            self.on_sound_received)
         self.mumble.set_receive_sound(True)
 
         if self.mumble.users.myself is None:
             raise ConnectionError
 
     def on_sound_received(self, user, sound_chunk):
-        #self.pcm_buffer = self.pcm_buffer + sound_chunk.pcm
-        #self.mumble_gui.user_start_stop_talking(user, 'talking')
+        # self.pcm_buffer = self.pcm_buffer + sound_chunk.pcm
+        # self.mumble_gui.user_start_stop_talking(user, 'talking')
         # self.stream.write(sound_chunk.pcm)
         self.pcm_buffer = self.pcm_buffer + sound_chunk.pcm
         # print(len(self.pcm_buffer))
         if len(self.pcm_buffer) > 4096 * 4:
             self.stream.write(bytes(self.pcm_buffer))
             self.pcm_buffer = bytearray()
-        #self.mumble_gui.user_start_stop_talking(user, 'normal')
+        # self.mumble_gui.user_start_stop_talking(user, 'normal')
 
     # def on_audio_ready(self, in_data, frame_count, time_info, status_flags):
 
@@ -366,7 +383,8 @@ class MumbleClient:
         # return (bytes(self.pcm_buffer), pyaudio.paContinue)
 
     def send_message(self, client_gui):
-        '''send_message: sends a message using the pymumble client and updates the text output'''
+        '''send_message: sends a message using
+        the pymumble client and updates the text output'''
         if client_gui.tabbed_chat.currentIndex() == 1:
             target = self.mumble.channels[self.mumble.users.myself['channel_id']]
         elif client_gui.tabbed_chat.currentIndex() == 0:
@@ -385,7 +403,7 @@ class MumbleClient:
         client_gui.chat_entry.setText('')
         self.sender.message_recieved.emit(
             message_post, self.user, client_gui.tabbed_chat.currentIndex())
-        #new_text = client_gui.chat_view.toPlainText() + message_post
+        # new_text = client_gui.chat_view.toPlainText() + message_post
         # client_gui.chat_view.setText(new_text)
 
     def on_message_recieved(self, message):
@@ -397,11 +415,14 @@ class MumbleClient:
     def set_mumble_gui(self, mumble_gui):
         self.mumble_gui = mumble_gui
         self.mumble.callbacks.set_callback(
-            pymumble.constants.PYMUMBLE_CLBK_USERUPDATED, functools.partial(self.mumble_gui.user_modified, self))
+            pymumble.constants.PYMUMBLE_CLBK_USERUPDATED,
+            functools.partial(self.mumble_gui.user_modified, self))
         self.mumble.callbacks.set_callback(
-            pymumble.constants.PYMUMBLE_CLBK_USERCREATED, functools.partial(self.mumble_gui.user_created, self))
+            pymumble.constants.PYMUMBLE_CLBK_USERCREATED,
+            functools.partial(self.mumble_gui.user_created, self))
         self.mumble.callbacks.set_callback(
-            pymumble.constants.PYMUMBLE_CLBK_USERREMOVED, functools.partial(self.mumble_gui.user_deleted, self))
+            pymumble.constants.PYMUMBLE_CLBK_USERREMOVED,
+            functools.partial(self.mumble_gui.user_deleted, self))
 
 
 def main():
